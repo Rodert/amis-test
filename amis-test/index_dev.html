@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>amis demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <link rel="stylesheet" href="./sdk/sdk.css" />
+  <link rel="stylesheet" href="./sdk/helper.css" />
+  <link rel="stylesheet" href="./sdk/iconfont.css" />
+  <!-- 这是默认主题所需的，如果是其他主题则不需要 -->
+  <!-- 从 1.1.0 开始 sdk.css 将不支持 IE 11，如果要支持 IE11 请引用这个 css，并把前面那个删了 -->
+  <!-- <link rel="stylesheet" href="sdk-ie11.css" /> -->
+  <!-- 不过 amis 开发团队几乎没测试过 IE 11 下的效果，所以可能有细节功能用不了，如果发现请报 issue -->
+  <style>
+    html,
+    body,
+    .app-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="app-wrapper"></div>
+  <script src="./sdk/sdk.js"></script>
+  <script type="text/javascript">
+    (function () {
+      let amis = amisRequire('amis/embed');
+      // 通过替换下面这个配置来生成不同页面
+      let amisJSON = 
+      {
+        "type": "page",
+        "messages": {},
+        "body": [
+          {
+            "type": "crud",
+            "perPage": 20,
+            "orderBy": "uid",
+            "orderDir": "desc",
+            "api": "get:http://test.javapub.net.cn/3019372-back-end/admin/users",
+            "columns": [
+              {
+                "name": "uid",
+                "label": "UID",
+                "type": "text",
+                "sortable": true
+              },
+              {
+                "name": "name",
+                "label": "姓名",
+                "type": "text"
+              },
+              {
+                "name": "inner",
+                "label": "用户分类",
+                "type": "tpl",
+                "tpl": "${inner|isTrue:'内部员工':'警官'}"
+              },
+              {
+                "name": "department",
+                "label": "警种/所在部门",
+                "type": "text"
+              },
+              {
+                "name": "office_location",
+                "label": "任职地/工作地",
+                "type": "text"
+              },
+              {
+                "name": "start_time_str",
+                "label": "注册时间",
+                "type": "text",
+                "sortable": true
+              },
+              {
+                "name": "end_time_str",
+                "label": "试用期到期时间",
+                "type": "text",
+                "sortable": true
+              },
+              {
+                "name": "status_str",
+                "label": "状态",
+                "type": "text"
+              },
+              {
+                "type": "operation",
+                "label": "操作",
+                "buttons": [
+                  {
+                    "label": "编辑",
+                    "type": "button",
+                    "actionType": "dialog",
+                    "level": "link",
+                    "dialog": {
+                      "title": "编辑",
+                      "body": {
+                        "mode": "horizontal",
+                        "autoFocus": false,
+                        "horizontal": {
+                          "left": "col-sm-3",
+                          "right": "col-sm-9",
+                          "offset": "col-sm-offset-2"
+                        },
+                        "type": "form",
+                        "api": "put:http://test.javapub.net.cn/3019372-back-end/admin/users/$id",
+                        "body": [
+                          {
+                            "label": "UID",
+                            "name": "uid",
+                            "type": "static"
+                          },
+                          {
+                            "label": "姓名",
+                            "name": "name",
+                            "type": "input-text",
+                            "required": true
+                          },
+                          {
+                            "label": "性别",
+                            "type": "select",
+                            "name": "sex",
+                            "options": [
+                              {
+                                "label": "男",
+                                "value": 1
+                              },
+                              {
+                                "label": "女",
+                                "value": 2
+                              }
+                            ]
+                          },
+                          {
+                            "label": "手机号",
+                            "name": "phone",
+                            "type": "input-text",
+                            "required": true
+                          },
+                          {
+                            "label": "用户分类",
+                            "type": "select",
+                            "name": "inner",
+                            "value": false,
+                            "required": true,
+                            "options": [
+                              {
+                                "label": "内部员工",
+                                "value": true
+                              },
+                              {
+                                "label": "警官",
+                                "value": false
+                              }
+                            ]
+                          },
+                          {
+                            "label": "警号/工号",
+                            "name": "police_id",
+                            "required": true,
+                            "type": "input-text"
+                          },
+                          {
+                            "label": "警种/所在部门",
+                            "name": "department",
+                            "type": "input-text"
+                          },
+                          {
+                            "label": "任职地/工作地",
+                            "name": "office_location",
+                            "required": true,
+                            "type": "input-text"
+                          },
+                          {
+                            "name": "start_time_str",
+                            "label": "首次申请时间",
+                            "type": "static"
+                          },
+                          {
+                            "name": "created_at_str",
+                            "label": "注册时间",
+                            "type": "static"
+                          },
+                          {
+                            "name": "lately_subscribe_time_str",
+                            "label": "最近续订时间",
+                            "type": "static"
+                          },
+                          {
+                            "name": "end_time_str",
+                            "label": "试用到期时间",
+                            "type": "static"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "label": "查看",
+                    "type": "button",
+                    "actionType": "dialog",
+                    "level": "link",
+                    "dialog": {
+                      "title": "查看详情",
+                      "body": {
+                        "mode": "horizontal",
+                        "autoFocus": false,
+                        "horizontal": {
+                          "left": "col-sm-3",
+                          "right": "col-sm-9",
+                          "offset": "col-sm-offset-2"
+                        },
+                        "type": "form",
+                        "body": [
+                          {
+                            "name": "uid",
+                            "label": "UID",
+                            "type": "static"
+                          },
+                          {
+                            "name": "name",
+                            "label": "姓名",
+                            "type": "static"
+                          },
+                          {
+                            "name": "sex_str",
+                            "label": "性别",
+                            "type": "static"
+                          },
+                          {
+                            "name": "phone",
+                            "label": "手机号",
+                            "type": "static"
+                          },
+                          {
+                            "name": "inner",
+                            "label": "用户分类",
+                            "type": "static",
+                            "tpl": "${inner|isTrue:'内部员工':'警官'}"
+                          },
+                          {
+                            "name": "police_id",
+                            "label": "警号/工号",
+                            "type": "static"
+                          },
+                          {
+                            "name": "department",
+                            "label": "警种/所在部门",
+                            "type": "static"
+                          },
+                          {
+                            "name": "office_location",
+                            "label": "任职地/工作地",
+                            "type": "static"
+                          },
+                          {
+                            "name": "start_time_str",
+                            "label": "首次申请时间",
+                            "type": "static"
+                          },
+                          {
+                            "name": "created_at_str",
+                            "label": "注册时间",
+                            "type": "static"
+                          },
+                          {
+                            "name": "lately_subscribe_time_str",
+                            "label": "最近续订时间",
+                            "type": "static"
+                          },
+                          {
+                            "name": "end_time_str",
+                            "label": "试用到期时间",
+                            "type": "static"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "label": "续订",
+                    "actionType": "dialog",
+                    "level": "link",
+                    "dialog": {
+                      "title": "续订确认",
+                      "closeOnEsc": true,
+                      "closeOnOutside": true,
+                      "actions": [
+                        {
+                          "label": "取消",
+                          "actionType": "cancel",
+                          "type": "button"
+                        },
+                        {
+                          "label": "确定",
+                          "actionType": "ajax",
+                          "primary": true,
+                          "type": "button",
+                          "close": true,
+                          "api": "put:http://test.javapub.net.cn/3019372-back-end/admin/users/$id/delay"
+                        }
+                      ],
+                      "body": {
+                        "type": "page",
+                        "initApi": "get:http://test.javapub.net.cn/3019372-back-end/admin/users/$id/delay",
+                        "body": [
+                          {
+                            "type": "tpl",
+                            "tpl": "续订用户姓名：${name}"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "tpl",
+                            "tpl": "续订后的到期时间：${end_time_str}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "label": "${status|isEquals:0:'停用':'启用'}",
+                    "actionType": "ajax",
+                    "level": "link",
+                    "className": "text-danger",
+                    "confirmText": "你确定要${status|isEquals:0:'停用':'启用'}该用户吗？",
+                    "api": "put:http://test.javapub.net.cn/3019372-back-end/admin/users/$id/enable"
+                  }
+                ]
+              }
+            ],
+            "bulkActions": [],
+            "itemActions": [],
+            "features": [
+              "create",
+              "update",
+              "view",
+              "delete"
+            ],
+            "footerToolbar": [
+              "statistics",
+              "switch-per-page",
+              "pagination"
+            ],
+            "headerToolbar": [
+              {
+                "label": "新增",
+                "type": "button",
+                "actionType": "dialog",
+                "level": "primary",
+                "dialog": {
+                  "title": "新增",
+                  "body": {
+                    "mode": "horizontal",
+                    "autoFocus": false,
+                    "horizontal": {
+                      "left": "col-sm-3",
+                      "right": "col-sm-9",
+                      "offset": "col-sm-offset-2"
+                    },
+                    "type": "form",
+                    "api": "post:http://test.javapub.net.cn/3019372-back-end/admin/users",
+                    "body": [
+                      {
+                        "label": "姓名",
+                        "name": "name",
+                        "type": "input-text",
+                        "required": true
+                      },
+                      {
+                        "label": "性别",
+                        "type": "select",
+                        "name": "sex",
+                        "options": [
+                          {
+                            "label": "男",
+                            "value": 1
+                          },
+                          {
+                            "label": "女",
+                            "value": 2
+                          }
+                        ]
+                      },
+                      {
+                        "label": "手机号",
+                        "name": "phone",
+                        "type": "input-text",
+                        "required": true
+                      },
+                      {
+                        "label": "用户分类",
+                        "type": "select",
+                        "name": "inner",
+                        "value": false,
+                        "required": true,
+                        "options": [
+                          {
+                            "label": "内部员工",
+                            "value": true
+                          },
+                          {
+                            "label": "警官",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "label": "警号/工号",
+                        "name": "police_id",
+                        "required": true,
+                        "type": "input-text"
+                      },
+                      {
+                        "label": "警种/所在部门",
+                        "name": "department",
+                        "type": "input-text"
+                      },
+                      {
+                        "label": "任职地/工作地",
+                        "name": "office_location",
+                        "required": true,
+                        "type": "input-text"
+                      },
+                      {
+                        "label": "首次申请时间",
+                        "name": "first_apply_time",
+                        "type": "input-date",
+                        "required": true,
+                        "value": "today"
+                      }
+                    ]
+                  }
+                }
+              },
+              "bulkActions",
+              "pagination"
+            ]
+          }
+        ]
+      }
+      let amisScoped = amis.embed('#root', amisJSON);
+    })();
+  </script>
+</body>
+
+</html>

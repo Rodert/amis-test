@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>amis demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <link rel="stylesheet" href="./sdk/sdk.css" />
+  <link rel="stylesheet" href="./sdk/helper.css" />
+  <link rel="stylesheet" href="./sdk/iconfont.css" />
+  <!-- 这是默认主题所需的，如果是其他主题则不需要 -->
+  <!-- 从 1.1.0 开始 sdk.css 将不支持 IE 11，如果要支持 IE11 请引用这个 css，并把前面那个删了 -->
+  <!-- <link rel="stylesheet" href="sdk-ie11.css" /> -->
+  <!-- 不过 amis 开发团队几乎没测试过 IE 11 下的效果，所以可能有细节功能用不了，如果发现请报 issue -->
+  <style>
+    html,
+    body,
+    .app-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="app-wrapper"></div>
+  <script src="./sdk/sdk.js"></script>
+  <script type="text/javascript">
+    (function () {
+      let amis = amisRequire('amis/embed');
+      // 通过替换下面这个配置来生成不同页面
+      // 本地地址：http:\//127.0.0.1:9610
+      // 测试地址：http://admin.test.javapub.net.cn/caseapi
+      // 预发布环境:https:\//preview.javapub.net.cn/    
+      let amisJSON = {
+        "type": "page",
+        "body": [
+          {
+            "type": "crud",
+            "id": "u:655c2f129f90",
+            "perPage": 20,
+            "orderBy": "id",
+            "orderDir": "desc",
+            "api": "get:http://127.0.0.1:9610/chain-analysis/case_law_library",
+            "columns": [
+              {
+                "name": "id",
+                "label": "ID",
+                "type": "text",
+                "sortable": false,
+                "id": "u:cfdebdd6424f"
+              },
+              {
+                "name": "origin_id",
+                "label": "裁判文书网源ID",
+                "type": "text",
+                "sortable": false,
+                "className": "word-break",
+                "id": "u:cfdebdd6424f"
+              },
+              {
+                "name": "case_number",
+                "label": "案号",
+                "type": "text",
+                "sortable": false,
+                "className": "word-break",
+                "id": "u:cfdebdd6424f"
+              },
+              {
+                "name": "title",
+                "label": "案件名称",
+                "className": "word-break",
+                "type": "text",
+                "id": "u:21852f5521fb"
+              },
+              {
+                "name": "is_classic",
+                "label": "经典案件",
+                "type": "tpl",
+                "id": "u:56174baba7ae",
+                "tpl": "${is_classic|isTrue:'是':'否'}"
+              },
+              {
+                "name": "reference_value",
+                "label": "参考价值",
+                "type": "tpl",
+                "tpl": "${reference_value|truncate:70:...}",
+                "id": "u:0c18ec0d88db"
+              },
+              {
+                "name": "classify_str",
+                "label": "案件分类",
+                "type": "text",
+                "id": "u:dfc5bb5428db"
+              },
+              {
+                "name": "trial_procedure",
+                "label": "审判程序",
+                "type": "text",
+                "id": "u:2e6a23f7f3e5"
+              },
+              {
+                "name": "court_name",
+                "label": "审判法院",
+                "type": "text",
+                "id": "u:aca4fb6561be"
+              },
+              {
+                "name": "referee_date",
+                "label": "审判日期",
+                "type": "text",
+                "id": "u:c36e722d0774"
+              },
+              {
+                "name": "is_online",
+                "label": "是否上线",
+                "type": "tpl",
+                "id": "u:dfc5bb5428db",
+                "tpl": "${is_online|isTrue:'上线':'下线'}"
+              },
+              {
+                "type": "operation",
+                "id": "u:b828ff81f0f4",
+                "label": "操作",
+                "width": 150,
+                "buttons": [
+                  {
+                    "label": "编辑",
+                    "type": "button",
+                    "actionType": "dialog",
+                    "level": "link",
+                    "dialog": {
+                      "title": "编辑",
+                      "size": "md",
+                      "body": {
+                        "type": "form",
+                        "api": "put:http://127.0.0.1:9610/chain-analysis/case_law_library/$id",
+                        "body": [
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "hidden",
+                            "name": "id"
+                          },
+                          {
+                            "type": "hidden",
+                            "name": "origin_id"
+                          },
+                          {
+                            "type": "hidden",
+                            "name": "lawsuit_type"
+                          },
+                          {
+                            "label": "案件名称",
+                            "name": "title",
+                            "type": "input-text",
+                            "required": true,
+                            "placeholder": "请输入案件名称"
+                          },
+                          {
+                            "label": "案件编号",
+                            "name": "case_number",
+                            "type": "input-text",
+                            "required": true
+                          },
+                          {
+                            "label": "案件类型",
+                            "name": "case_type",
+                            "type": "input-text",
+                            "required": false
+                          },
+                          {
+                            "label": "案件分类",
+                            "type": "select",
+                            "name": "classify",
+                            "multiple": false,
+                            "placeholder": "选择分类",
+                            "size": "sm",
+                            "required": true,
+                            "options": [
+                              {
+                                "label": "洗钱",
+                                "value": "XQ"
+                              },
+                              {
+                                "label": "诈骗",
+                                "value": "ZP"
+                              },
+                              {
+                                "label": "传销",
+                                "value": "CX"
+                              },
+                              {
+                                "label": "盗窃",
+                                "value": "DQ"
+                              },
+                              {
+                                "label": "贩毒",
+                                "value": "FD"
+                              },
+                              {
+                                "label": "非吸",
+                                "value": "FX"
+                              },
+                              {
+                                "label": "侵公",
+                                "value": "QG"
+                              },
+                              {
+                                "label": "网赌",
+                                "value": "WD"
+                              },
+                              {
+                                "label": "敲诈",
+                                "value": "QZ"
+                              },
+                              {
+                                "label": "帮信",
+                                "value": "BX"
+                              },
+                              {
+                                "label": "掩隐",
+                                "value": "YY"
+                              },
+                              {
+                                "label": "安全秩序",
+                                "value": "AQZX"
+                              },
+                              {
+                                "label": "其他",
+                                "value": "QT"
+                              }
+                            ],
+                            "id": "u:ff588b8e92a5",
+                            "clearable": true
+                          },
+                          {
+                            "label": "原始案由",
+                            "name": "reason",
+                            "type": "input-text",
+                            "required": false,
+                            "placeholder": "数据源上的案件理由，如 买卖合同纠纷"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>审判程序和审判时间</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "文书类型",
+                            "name": "document_type",
+                            "type": "input-text",
+                            "required": true,
+                            "placeholder": "输入文书类型，如 民事判决书"
+                          },
+                          {
+                            "label": "审判程序",
+                            "name": "trial_procedure",
+                            "type": "input-text",
+                            "required": true,
+                            "placeholder": "输入审判程序，如 民事二审"
+                          },
+                          {
+                            "label": "审判日期",
+                            "name": "referee_date",
+                            "format": "YYYY-MM-DD",
+                            "type": "input-date",
+                            "required": true,
+                            "placeholder": "请选择判决日期"
+                          },
+                          {
+                            "label": "审判年份",
+                            "name": "referee_year_str",
+                            "type": "input-year",
+                            "required": true,
+                            "inputFormat": "YYYY",
+                            "format": "YYYY",
+                            "placeholder": "请选择判决年份"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>当事人信息</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "原告",
+                            "name": "plaintiff",
+                            "type": "input-text",
+                            "required": true,
+                            "placeholder": "输入原告"
+                          },
+                          {
+                            "label": "被告",
+                            "name": "defendant",
+                            "type": "input-text",
+                            "required": true,
+                            "placeholder": "输入被告"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>法院信息</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "法院名称",
+                            "name": "court_name",
+                            "type": "input-text",
+                            "required": true,
+                            "placeholder": "输入法院名称"
+                          },
+                          {
+                            "label": "法院层级",
+                            "name": "court_level",
+                            "required": true,
+                            "type": "select",
+                            "options": [
+                              {
+                                "label": "最高法院",
+                                "value": "ZGFY"
+                              },
+                              {
+                                "label": "高级法院",
+                                "value": "GJFY"
+                              },
+                              {
+                                "label": "中级法院",
+                                "value": "ZJFY"
+                              },
+                              {
+                                "label": "基层法院",
+                                "value": "JCFY"
+                              }
+                            ]
+                          },
+                          {
+                            "label": "法院所在省份",
+                            "name": "court_province",
+                            "required": true,
+                            "type": "select",
+                            "options": [
+                              {
+                                "label": "安徽",
+                                "value": "安徽"
+                              },
+                              {
+                                "label": "澳门",
+                                "value": "澳门"
+                              },
+                              {
+                                "label": "北京",
+                                "value": "北京"
+                              },
+                              {
+                                "label": "重庆",
+                                "value": "重庆"
+                              },
+                              {
+                                "label": "福建",
+                                "value": "福建"
+                              },
+                              {
+                                "label": "贵州",
+                                "value": "贵州"
+                              },
+                              {
+                                "label": "广东",
+                                "value": "广东"
+                              },
+                              {
+                                "label": "广西",
+                                "value": "广西"
+                              },
+                              {
+                                "label": "甘肃",
+                                "value": "甘肃"
+                              },
+                              {
+                                "label": "河北",
+                                "value": "河北"
+                              },
+                              {
+                                "label": "河南",
+                                "value": "河南"
+                              },
+                              {
+                                "label": "湖北",
+                                "value": "湖北"
+                              },
+                              {
+                                "label": "湖南",
+                                "value": "湖南"
+                              },
+                              {
+                                "label": "海南",
+                                "value": "海南"
+                              },
+                              {
+                                "label": "黑龙江",
+                                "value": "黑龙江"
+                              },
+                              {
+                                "label": "江苏",
+                                "value": "江苏"
+                              },
+                              {
+                                "label": "江西",
+                                "value": "江西"
+                              },
+                              {
+                                "label": "吉林",
+                                "value": "吉林"
+                              },
+                              {
+                                "label": "辽宁",
+                                "value": "辽宁"
+                              },
+                              {
+                                "label": "内蒙古",
+                                "value": "内蒙古"
+                              },
+                              {
+                                "label": "宁夏",
+                                "value": "宁夏"
+                              },
+                              {
+                                "label": "青海",
+                                "value": "青海"
+                              },
+                              {
+                                "label": "山东",
+                                "value": "山东"
+                              },
+                              {
+                                "label": "山西",
+                                "value": "山西"
+                              },
+                              {
+                                "label": "上海",
+                                "value": "上海"
+                              },
+                              {
+                                "label": "陕西",
+                                "value": "陕西"
+                              },
+                              {
+                                "label": "四川",
+                                "value": "四川"
+                              },
+                              {
+                                "label": "天津",
+                                "value": "天津"
+                              },
+                              {
+                                "label": "台湾",
+                                "value": "台湾"
+                              },
+                              {
+                                "label": "西藏",
+                                "value": "西藏"
+                              },
+                              {
+                                "label": "新疆",
+                                "value": "新疆"
+                              },
+                              {
+                                "label": "香港",
+                                "value": "香港"
+                              },
+                              {
+                                "label": "云南",
+                                "value": "云南"
+                              },
+                              {
+                                "label": "浙江",
+                                "value": "浙江"
+                              }
+                            ]
+                          },
+                          {
+                            "label": "法院地址",
+                            "name": "court_address",
+                            "type": "input-text",
+                            "required": false,
+                            "placeholder": "输入法院详细地址"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>案件详情</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "input-tag",
+                            "name": "label",
+                            "label": "标签",
+                            "enableBatchAdd": true,
+                            "placeholder": "标签使用 、 分割，如 USDT、网赌",
+                            "separator": "、",
+                            "delimiter": "、"
+                          },
+                          {
+                            "label": "是否是经典案例",
+                            "name": "is_classic",
+                            "required": false,
+                            "type": "radios",
+                            "value": false,
+                            "options": [
+                              {
+                                "label": "是",
+                                "value": true
+                              },
+                              {
+                                "label": "否",
+                                "value": false
+                              }
+                            ]
+                          },
+                          {
+                            "label": "参考价值",
+                            "name": "reference_value",
+                            "type": "textarea",
+                            "required": false,
+                            "placeholder": "输入案件参考价值，最多500字"
+                          },
+                          {
+                            "label": "判例正文",
+                            "name": "case_text",
+                            "type": "input-rich-text",
+                            "required": true,
+                            "placeholder": "输入判例正文"
+                          },
+                          {
+                            "label": "审判成员组及时间",
+                            "name": "trial_member_time",
+                            "type": "textarea",
+                            "required": true,
+                            "placeholder": "输入审判成员组及时间，如 \n审判长  王XX\n审判员  关XX\n审判员  潘XX\n二〇二一年三月XX日\n书记员  梁XX\n "
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>法律依据</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "法律规范名称和条例",
+                            "name": "legal_regulations",
+                            "type": "textarea",
+                            "required": true,
+                            "placeholder": "输入法律规范名称和条例，如 \n《中华人民共和国刑法（1997年）》\n第三百一十二条第一款\n"
+                          },
+                          {
+                            "label": "具体内容",
+                            "name": "legal_content",
+                            "type": "input-rich-text",
+                            "required": false,
+                            "placeholder": "添加法规详情"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<span style='display:inline-block;font-size:1.17em;'>关联案件</span><span>&nbsp;&nbsp;&nbsp;关联案件名称为必填项</span>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "json-schema",
+                            "name": "related_cases_json",
+                            "label": "关联案件【请点击展开】",
+                            "schema": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "name"
+                                ],
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "title": "关联案件名称"
+                                  },
+                                  "url": {
+                                    "type": "string",
+                                    "title": "关联案件访问链接"
+                                  },
+                                  "origin_id": {
+                                    "type": "string",
+                                    "title": "源ID"
+                                  }
+                                }
+                              },
+                              "minContains": 5,
+                              "maxContains": 30
+                            }
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "是否上线",
+                            "name": "is_online",
+                            "required": false,
+                            "type": "radios",
+                            "value": true,
+                            "options": [
+                              {
+                                "label": "上线",
+                                "value": true
+                              },
+                              {
+                                "label": "下线",
+                                "value": false
+                              }
+                            ]
+                          }
+                        ],
+                        "mode": "horizontal",
+                        "autoFocus": false,
+                        "horizontal": {
+                          "left": "col-sm-3",
+                          "right": "col-sm-9",
+                          "offset": "col-sm-offset-2"
+                        }
+                      },
+                      "showErrorMsg": true
+                    },
+                    "id": "u:50b9676bb0c1"
+                  },
+                  {
+                    "label": "查看",
+                    "type": "button",
+                    "actionType": "dialog",
+                    "level": "link",
+                    "dialog": {
+                      "actions": [{
+                        "type": "button",
+                        "actionType": "close",
+                        "label": "关闭"
+                      }],
+                      "title": "查看详情",
+                      "size": "md",
+                      "body": {
+                        "type": "form",
+                        "body": [
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "案件名称",
+                            "name": "title",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "请输入案件名称"
+                          },
+                          {
+                            "label": "案件编号",
+                            "name": "case_number",
+                            "type": "static",
+                            "required": true
+                          },
+                          {
+                            "label": "案件类型",
+                            "name": "case_type",
+                            "type": "static",
+                            "required": false
+                          },
+                          {
+                            "label": "案件分类",
+                            "type": "select",
+                            "name": "classify",
+                            "multiple": false,
+                            "placeholder": "选择分类",
+                            "size": "sm",
+                            "required": true,
+                            "options": [
+                              {
+                                "label": "洗钱",
+                                "value": "XQ"
+                              },
+                              {
+                                "label": "诈骗",
+                                "value": "ZP"
+                              },
+                              {
+                                "label": "传销",
+                                "value": "CX"
+                              },
+                              {
+                                "label": "盗窃",
+                                "value": "DQ"
+                              },
+                              {
+                                "label": "贩毒",
+                                "value": "FD"
+                              },
+                              {
+                                "label": "非吸",
+                                "value": "FX"
+                              },
+                              {
+                                "label": "侵公",
+                                "value": "QG"
+                              },
+                              {
+                                "label": "网赌",
+                                "value": "WD"
+                              },
+                              {
+                                "label": "敲诈",
+                                "value": "QZ"
+                              },
+                              {
+                                "label": "帮信",
+                                "value": "BX"
+                              },
+                              {
+                                "label": "掩隐",
+                                "value": "YY"
+                              },
+                              {
+                                "label": "安全秩序",
+                                "value": "AQZX"
+                              },
+                              {
+                                "label": "其他",
+                                "value": "QT"
+                              }
+                            ],
+                            "id": "u:ff588b8e92a5",
+                            "clearable": true
+                          },
+                          {
+                            "label": "原始案由",
+                            "name": "reason",
+                            "type": "static",
+                            "required": false,
+                            "placeholder": "数据源上的案件理由，如 买卖合同纠纷"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>审判程序和审判时间</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "文书类型",
+                            "name": "document_type",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入文书类型，如 民事判决书"
+                          },
+                          {
+                            "label": "审判程序",
+                            "name": "trial_procedure",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入审判程序，如 民事二审"
+                          },
+                          {
+                            "label": "审判日期",
+                            "name": "referee_date",
+                            "format": "YYYY-MM-DD",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "请选择判决日期"
+                          },
+                          {
+                            "label": "审判年份",
+                            "name": "referee_year_str",
+                            "type": "static",
+                            "required": true,
+                            "inputFormat": "YYYY",
+                            "format": "YYYY",
+                            "placeholder": "请选择判决年份"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>当事人信息</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "原告",
+                            "name": "plaintiff",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入原告"
+                          },
+                          {
+                            "label": "被告",
+                            "name": "defendant",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入被告"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>法院信息</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "法院名称",
+                            "name": "court_name",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入法院名称"
+                          },
+                          {
+                            "label": "法院层级",
+                            "name": "court_level",
+                            "required": true,
+                            "type": "select",
+                            "options": [
+                              {
+                                "label": "最高法院",
+                                "value": "ZGFY"
+                              },
+                              {
+                                "label": "高级法院",
+                                "value": "GJFY"
+                              },
+                              {
+                                "label": "中级法院",
+                                "value": "ZJFY"
+                              },
+                              {
+                                "label": "基层法院",
+                                "value": "JCFY"
+                              }
+                            ]
+                          },
+                          {
+                            "label": "法院所在省份",
+                            "name": "court_province",
+                            "required": true,
+                            "type": "select",
+                            "options": [
+                              {
+                                "label": "安徽",
+                                "value": "安徽"
+                              },
+                              {
+                                "label": "澳门",
+                                "value": "澳门"
+                              },
+                              {
+                                "label": "北京",
+                                "value": "北京"
+                              },
+                              {
+                                "label": "重庆",
+                                "value": "重庆"
+                              },
+                              {
+                                "label": "福建",
+                                "value": "福建"
+                              },
+                              {
+                                "label": "贵州",
+                                "value": "贵州"
+                              },
+                              {
+                                "label": "广东",
+                                "value": "广东"
+                              },
+                              {
+                                "label": "广西",
+                                "value": "广西"
+                              },
+                              {
+                                "label": "甘肃",
+                                "value": "甘肃"
+                              },
+                              {
+                                "label": "河北",
+                                "value": "河北"
+                              },
+                              {
+                                "label": "河南",
+                                "value": "河南"
+                              },
+                              {
+                                "label": "湖北",
+                                "value": "湖北"
+                              },
+                              {
+                                "label": "湖南",
+                                "value": "湖南"
+                              },
+                              {
+                                "label": "海南",
+                                "value": "海南"
+                              },
+                              {
+                                "label": "黑龙江",
+                                "value": "黑龙江"
+                              },
+                              {
+                                "label": "江苏",
+                                "value": "江苏"
+                              },
+                              {
+                                "label": "江西",
+                                "value": "江西"
+                              },
+                              {
+                                "label": "吉林",
+                                "value": "吉林"
+                              },
+                              {
+                                "label": "辽宁",
+                                "value": "辽宁"
+                              },
+                              {
+                                "label": "内蒙古",
+                                "value": "内蒙古"
+                              },
+                              {
+                                "label": "宁夏",
+                                "value": "宁夏"
+                              },
+                              {
+                                "label": "青海",
+                                "value": "青海"
+                              },
+                              {
+                                "label": "山东",
+                                "value": "山东"
+                              },
+                              {
+                                "label": "山西",
+                                "value": "山西"
+                              },
+                              {
+                                "label": "上海",
+                                "value": "上海"
+                              },
+                              {
+                                "label": "陕西",
+                                "value": "陕西"
+                              },
+                              {
+                                "label": "四川",
+                                "value": "四川"
+                              },
+                              {
+                                "label": "天津",
+                                "value": "天津"
+                              },
+                              {
+                                "label": "台湾",
+                                "value": "台湾"
+                              },
+                              {
+                                "label": "西藏",
+                                "value": "西藏"
+                              },
+                              {
+                                "label": "新疆",
+                                "value": "新疆"
+                              },
+                              {
+                                "label": "香港",
+                                "value": "香港"
+                              },
+                              {
+                                "label": "云南",
+                                "value": "云南"
+                              },
+                              {
+                                "label": "浙江",
+                                "value": "浙江"
+                              }
+                            ]
+                          },
+                          {
+                            "label": "法院地址",
+                            "name": "court_address",
+                            "type": "static",
+                            "required": false,
+                            "placeholder": "输入法院详细地址"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>案件详情</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "static",
+                            "name": "label",
+                            "label": "标签",
+                            "enableBatchAdd": true,
+                            "placeholder": "标签使用 、 分割，如 USDT、网赌",
+                            "separator": "、",
+                            "delimiter": "、"
+                          },
+                          {
+                            "label": "是否是经典案例",
+                            "name": "is_classic",
+                            "required": false,
+                            "type": "radios",
+                            "value": false,
+                            "options": [
+                              {
+                                "label": "是",
+                                "value": true
+                              },
+                              {
+                                "label": "否",
+                                "value": false
+                              }
+                            ]
+                          },
+                          {
+                            "label": "参考价值",
+                            "name": "reference_value",
+                            "type": "static",
+                            "required": false,
+                            "placeholder": "输入案件参考价值，最多500字"
+                          },
+                          {
+                            "label": "判例正文",
+                            "name": "case_text",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入判例正文"
+                          },
+                          {
+                            "label": "审判成员组及时间",
+                            "name": "trial_member_time",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入审判成员组及时间，如 \n审判长  王XX<br/>\n审判员  关XX<br/>\n审判员  潘XX<br/>\n二〇二一年三月XX日<br/>\n书记员  梁XX\n "
+                          },
+                          {
+                            "type": "html",
+                            "html": "<h3>法律依据</h3>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "法律规范名称和条例",
+                            "name": "legal_regulations",
+                            "type": "static",
+                            "required": true,
+                            "placeholder": "输入法律规范名称和条例，如 \n《中华人民共和国刑法（1997年）》\n第三百一十二条第一款\n"
+                          },
+                          {
+                            "label": "具体内容",
+                            "name": "legal_content",
+                            "type": "static",
+                            "required": false,
+                            "placeholder": "添加法规详情"
+                          },
+                          {
+                            "type": "html",
+                            "html": "<span style='display:inline-block;font-size:1.17em;'>关联案件</span><span>&nbsp;&nbsp;&nbsp;关联案件名称为必填项</span>"
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "json-schema",
+                            "name": "related_cases_json",
+                            "label": "关联案件【请点击展开】",
+                            "schema": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "name"
+                                ],
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "title": "关联案件名称"
+                                  },
+                                  "url": {
+                                    "type": "string",
+                                    "title": "关联案件访问链接"
+                                  },
+                                  "origin_id": {
+                                    "type": "string",
+                                    "title": "源ID"
+                                  }
+                                }
+                              },
+                              "minContains": 5,
+                              "maxContains": 30
+                            }
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "label": "是否上线",
+                            "name": "is_online",
+                            "required": false,
+                            "type": "radios",
+                            "value": true,
+                            "options": [
+                              {
+                                "label": "上线",
+                                "value": true
+                              },
+                              {
+                                "label": "下线",
+                                "value": false
+                              }
+                            ]
+                          }
+                        ],
+                        "mode": "horizontal",
+                        "autoFocus": false,
+                        "horizontal": {
+                          "left": "col-sm-3",
+                          "right": "col-sm-9",
+                          "offset": "col-sm-offset-2"
+                        }
+                      }
+                    },
+                    "id": "u:bca07ac8d103"
+                  },
+                  {
+                    "type": "button",
+                    "label": "删除",
+                    "actionType": "ajax",
+                    "level": "link",
+                    "className": "text-danger",
+                    "confirmText": "确定要删除ID: $id 判例吗？",
+                    "api": "delete:http://127.0.0.1:9610/chain-analysis/case_law_library/$id",
+                    "id": "u:8e229d083c06"
+                  }
+                ]
+              }
+            ],
+            "bulkActions": [],
+            "itemActions": [],
+            "features": [
+              "create",
+              "update",
+              "view",
+              "delete"
+            ],
+            "footerToolbar": [
+              "statistics",
+              "switch-per-page",
+              "pagination"
+            ],
+            "headerToolbar": [
+              {
+                "label": "新增",
+                "type": "button",
+                "actionType": "dialog",
+                "level": "primary",
+                "dialog": {
+                  "size": "md",
+                  "title": "新增判例文书内容",
+                  "body": {
+                    "type": "form",
+                    "api": "post:http://127.0.0.1:9610/chain-analysis/case_law_library/add",
+                    "body": [
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "label": "案件名称",
+                        "name": "title",
+                        "type": "input-text",
+                        "required": true,
+                        "placeholder": "请输入案件名称"
+                      },
+                      {
+                        "label": "案件编号",
+                        "name": "case_number",
+                        "type": "input-text",
+                        "required": true
+                      },
+                      {
+                        "label": "案件类型",
+                        "name": "case_type",
+                        "type": "input-text",
+                        "required": false
+                      },
+                      {
+                        "label": "案件分类",
+                        "type": "select",
+                        "name": "classify",
+                        "multiple": false,
+                        "placeholder": "选择分类",
+                        "size": "sm",
+                        "required": true,
+                        "options": [
+                          {
+                            "label": "洗钱",
+                            "value": "XQ"
+                          },
+                          {
+                            "label": "诈骗",
+                            "value": "ZP"
+                          },
+                          {
+                            "label": "传销",
+                            "value": "CX"
+                          },
+                          {
+                            "label": "盗窃",
+                            "value": "DQ"
+                          },
+                          {
+                            "label": "贩毒",
+                            "value": "FD"
+                          },
+                          {
+                            "label": "非吸",
+                            "value": "FX"
+                          },
+                          {
+                            "label": "侵公",
+                            "value": "QG"
+                          },
+                          {
+                            "label": "网赌",
+                            "value": "WD"
+                          },
+                          {
+                            "label": "敲诈",
+                            "value": "QZ"
+                          },
+                          {
+                            "label": "帮信",
+                            "value": "BX"
+                          },
+                          {
+                            "label": "掩隐",
+                            "value": "YY"
+                          },
+                          {
+                            "label": "安全秩序",
+                            "value": "AQZX"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "QT"
+                          }
+                        ],
+                        "id": "u:ff588b8e92a5",
+                        "clearable": true
+                      },
+                      {
+                        "label": "原始案由",
+                        "name": "reason",
+                        "type": "input-text",
+                        "required": false,
+                        "placeholder": "数据源上的案件理由，如 买卖合同纠纷"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<h3>审判程序和审判时间</h3>"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "label": "文书类型",
+                        "name": "document_type",
+                        "type": "input-text",
+                        "required": true,
+                        "placeholder": "输入文书类型，如 民事判决书"
+                      },
+                      {
+                        "label": "审判程序",
+                        "name": "trial_procedure",
+                        "type": "input-text",
+                        "required": true,
+                        "placeholder": "输入审判程序，如 民事二审"
+                      },
+                      {
+                        "label": "审判日期",
+                        "name": "referee_date",
+                        "format": "YYYY-MM-DD",
+                        "type": "input-date",
+                        "required": true,
+                        "placeholder": "请选择判决日期"
+                      },
+                      {
+                        "label": "审判年份",
+                        "name": "referee_year_str",
+                        "type": "input-year",
+                        "required": true,
+                        "inputFormat": "YYYY",
+                        "format": "YYYY",
+                        "placeholder": "请选择判决年份"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<h3>当事人信息</h3>"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "label": "原告",
+                        "name": "plaintiff",
+                        "type": "input-text",
+                        "required": true,
+                        "placeholder": "输入原告"
+                      },
+                      {
+                        "label": "被告",
+                        "name": "defendant",
+                        "type": "input-text",
+                        "required": true,
+                        "placeholder": "输入被告"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<h3>法院信息</h3>"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "label": "法院名称",
+                        "name": "court_name",
+                        "type": "input-text",
+                        "required": true,
+                        "placeholder": "输入法院名称"
+                      },
+                      {
+                        "label": "法院层级",
+                        "name": "court_level",
+                        "required": true,
+                        "type": "select",
+                        "options": [
+                          {
+                            "label": "最高法院",
+                            "value": "ZGFY"
+                          },
+                          {
+                            "label": "高级法院",
+                            "value": "GJFY"
+                          },
+                          {
+                            "label": "中级法院",
+                            "value": "ZJFY"
+                          },
+                          {
+                            "label": "基层法院",
+                            "value": "JCFY"
+                          }
+                        ]
+                      },
+                      {
+                        "label": "法院所在省份",
+                        "name": "court_province",
+                        "required": true,
+                        "type": "select",
+                        "options": [
+                          {
+                            "label": "安徽",
+                            "value": "安徽"
+                          },
+                          {
+                            "label": "澳门",
+                            "value": "澳门"
+                          },
+                          {
+                            "label": "北京",
+                            "value": "北京"
+                          },
+                          {
+                            "label": "重庆",
+                            "value": "重庆"
+                          },
+                          {
+                            "label": "福建",
+                            "value": "福建"
+                          },
+                          {
+                            "label": "贵州",
+                            "value": "贵州"
+                          },
+                          {
+                            "label": "广东",
+                            "value": "广东"
+                          },
+                          {
+                            "label": "广西",
+                            "value": "广西"
+                          },
+                          {
+                            "label": "甘肃",
+                            "value": "甘肃"
+                          },
+                          {
+                            "label": "河北",
+                            "value": "河北"
+                          },
+                          {
+                            "label": "河南",
+                            "value": "河南"
+                          },
+                          {
+                            "label": "湖北",
+                            "value": "湖北"
+                          },
+                          {
+                            "label": "湖南",
+                            "value": "湖南"
+                          },
+                          {
+                            "label": "海南",
+                            "value": "海南"
+                          },
+                          {
+                            "label": "黑龙江",
+                            "value": "黑龙江"
+                          },
+                          {
+                            "label": "江苏",
+                            "value": "江苏"
+                          },
+                          {
+                            "label": "江西",
+                            "value": "江西"
+                          },
+                          {
+                            "label": "吉林",
+                            "value": "吉林"
+                          },
+                          {
+                            "label": "辽宁",
+                            "value": "辽宁"
+                          },
+                          {
+                            "label": "内蒙古",
+                            "value": "内蒙古"
+                          },
+                          {
+                            "label": "宁夏",
+                            "value": "宁夏"
+                          },
+                          {
+                            "label": "青海",
+                            "value": "青海"
+                          },
+                          {
+                            "label": "山东",
+                            "value": "山东"
+                          },
+                          {
+                            "label": "山西",
+                            "value": "山西"
+                          },
+                          {
+                            "label": "上海",
+                            "value": "上海"
+                          },
+                          {
+                            "label": "陕西",
+                            "value": "陕西"
+                          },
+                          {
+                            "label": "四川",
+                            "value": "四川"
+                          },
+                          {
+                            "label": "天津",
+                            "value": "天津"
+                          },
+                          {
+                            "label": "台湾",
+                            "value": "台湾"
+                          },
+                          {
+                            "label": "西藏",
+                            "value": "西藏"
+                          },
+                          {
+                            "label": "新疆",
+                            "value": "新疆"
+                          },
+                          {
+                            "label": "香港",
+                            "value": "香港"
+                          },
+                          {
+                            "label": "云南",
+                            "value": "云南"
+                          },
+                          {
+                            "label": "浙江",
+                            "value": "浙江"
+                          }
+                        ]
+                      },
+                      {
+                        "label": "法院地址",
+                        "name": "court_address",
+                        "type": "input-text",
+                        "required": false,
+                        "placeholder": "输入法院详细地址"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<h3>案件详情</h3>"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-tag",
+                        "name": "label",
+                        "label": "标签",
+                        "enableBatchAdd": true,
+                        "placeholder": "标签使用 、 分割，如 USDT、网赌",
+                        "separator": "、",
+                        "delimiter": "、"
+                      },
+                      {
+                        "label": "是否是经典案例",
+                        "name": "is_classic",
+                        "required": false,
+                        "type": "radios",
+                        "value": false,
+                        "options": [
+                          {
+                            "label": "是",
+                            "value": true
+                          },
+                          {
+                            "label": "否",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "label": "参考价值",
+                        "name": "reference_value",
+                        "type": "textarea",
+                        "required": false,
+                        "placeholder": "输入案件参考价值，最多500字"
+                      },
+                      {
+                        "label": "判例正文",
+                        "name": "case_text",
+                        "type": "input-rich-text",
+                        "required": true,
+                        "placeholder": "输入判例正文"
+                      },
+                      {
+                        "label": "审判成员组及时间",
+                        "name": "trial_member_time",
+                        "type": "textarea",
+                        "required": true,
+                        "placeholder": "输入审判成员组及时间，如 \n审判长  王XX\n审判员  关XX\n审判员  潘XX\n二〇二一年三月XX日\n书记员  梁XX\n "
+                      },
+                      {
+                        "type": "html",
+                        "html": "<h3>法律依据</h3>"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "label": "法律规范名称和条例",
+                        "name": "legal_regulations",
+                        "type": "textarea",
+                        "required": true,
+                        "placeholder": "输入法律规范名称和条例，如 \n《中华人民共和国刑法（1997年）》\n第三百一十二条第一款\n"
+                      },
+                      {
+                        "label": "具体内容",
+                        "name": "legal_content",
+                        "type": "input-rich-text",
+                        "required": false,
+                        "placeholder": "添加法规详情"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<span style='display:inline-block;font-size:1.17em;'>关联案件</span><span>&nbsp;&nbsp;&nbsp;关联案件名称为必填项</span>"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "json-schema",
+                        "name": "related_cases_json",
+                        "label": "关联案件【请点击展开】",
+                        "schema": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "name"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "关联案件名称"
+                              },
+                              "url": {
+                                "type": "string",
+                                "title": "关联案件访问链接"
+                              },
+                              "origin_id": {
+                                "type": "string",
+                                "title": "源ID"
+                              }
+                            }
+                          },
+                          "minContains": 5,
+                          "maxContains": 30
+                        }
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "label": "是否上线",
+                        "name": "is_online",
+                        "required": false,
+                        "type": "radios",
+                        "value": true,
+                        "options": [
+                          {
+                            "label": "上线",
+                            "value": true
+                          },
+                          {
+                            "label": "下线",
+                            "value": false
+                          }
+                        ]
+                      }
+                    ],
+                    "mode": "horizontal",
+                    "autoFocus": false,
+                    "horizontal": {
+                      "left": "col-sm-3",
+                      "right": "col-sm-9",
+                      "offset": "col-sm-offset-2"
+                    }
+                  },
+                  "showErrorMsg": true
+                },
+                "id": "u:520f075d22e2"
+              },
+              "bulkActions",
+              "pagination"
+            ],
+            "name": "crud",
+            "filter": {
+              "title": "条件搜索",
+              "body": [
+                {
+                  "type": "group",
+                  "body": [
+                    {
+                      "type": "input-text",
+                      "name": "search",
+                      "clearable": true,
+                      "placeholder": "案件名称",
+                      "size": "md",
+                      "id": "u:ba5281c2458c"
+                    },
+                    {
+                      "type": "input-text",
+                      "name": "court_name",
+                      "clearable": true,
+                      "placeholder": "法院名称",
+                      "size": "md",
+                      "id": "u:ebb773dd7826"
+                    },
+                    {
+                      "type": "input-text",
+                      "name": "trial_procedure",
+                      "clearable": true,
+                      "placeholder": "审判程序",
+                      "size": "sm",
+                      "id": "u:570f26b439de"
+                    },
+                    {
+                      "label": "案件分类",
+                      "type": "select",
+                      "name": "classify",
+                      "multiple": true,
+                      "selectMode": "group",
+                      "placeholder": "全部",
+                      "size": "sm",
+                      "options": [
+                        {
+                          "label": "洗钱",
+                          "value": "XQ"
+                        },
+                        {
+                          "label": "诈骗",
+                          "value": "ZP"
+                        },
+                        {
+                          "label": "传销",
+                          "value": "CX"
+                        },
+                        {
+                          "label": "盗窃",
+                          "value": "DQ"
+                        },
+                        {
+                          "label": "贩毒",
+                          "value": "FD"
+                        },
+                        {
+                          "label": "非吸",
+                          "value": "FX"
+                        },
+                        {
+                          "label": "侵公",
+                          "value": "QG"
+                        },
+                        {
+                          "label": "网赌",
+                          "value": "WD"
+                        },
+                        {
+                          "label": "敲诈",
+                          "value": "QZ"
+                        },
+                        {
+                          "label": "帮信",
+                          "value": "BX"
+                        },
+                        {
+                          "label": "掩隐",
+                          "value": "YY"
+                        },
+                        {
+                          "label": "安全秩序",
+                          "value": "AQZX"
+                        },
+                        {
+                          "label": "其他",
+                          "value": "QT"
+                        }
+                      ],
+                      "id": "u:ff588b8e92a5",
+                      "clearable": true
+                    },
+                    {
+                      "label": "经典案例",
+                      "type": "select",
+                      "name": "is_classic",
+                      "placeholder": "全部",
+                      "size": "sm",
+                      "options": [
+                        {
+                          "label": "是",
+                          "value": "true"
+                        },
+                        {
+                          "label": "否",
+                          "value": "false"
+                        }
+                      ],
+                      "clearable": true,
+                      "id": "u:cf45d767177b"
+                    },
+                    {
+                      "label": "是否上线",
+                      "type": "select",
+                      "name": "is_online",
+                      "placeholder": "全部",
+                      "size": "sm",
+                      "options": [
+                        {
+                          "label": "全部",
+                          "value": "all"
+                        },
+                        {
+                          "label": "上线",
+                          "value": "true"
+                        },
+                        {
+                          "label": "下线",
+                          "value": "false"
+                        }
+                      ],
+                      "id": "u:adf73cd62d22",
+                      "clearable": true
+                    },
+                    {
+                      "type": "input-date-range",
+                      "name": "referee_date",
+                      "label": "审判日期",
+                      "format": "YYYY-MM-DD"
+                    }
+                  ],
+                  "id": "u:f56947d01cf0"
+                }
+              ],
+              "actions": [
+                {
+                  "type": "submit",
+                  "level": "primary",
+                  "label": "筛选",
+                  "id": "u:fac6ef9611c2"
+                }
+              ],
+              "id": "u:85eb607b9317"
+            }
+          }
+        ],
+        "id": "u:8b9215cedcb2",
+        "messages": {},
+        "asideResizor": false,
+        "pullRefresh": {
+          "disabled": true
+        },
+        "title": "裁判文书库管理"
+      }
+
+
+      let amisScoped = amis.embed('#root', amisJSON);
+    })();
+  </script>
+</body>
+
+</html>

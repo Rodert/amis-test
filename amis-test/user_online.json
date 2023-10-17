@@ -1,0 +1,405 @@
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "crud",
+      "id": "u:655c2f129f90",
+      "perPage": 20,
+      "orderBy": "uid",
+      "orderDir": "desc",
+      "api": "get:http://admin.javapub.net.cn/user/admin/users",
+      "columns": [
+        {
+          "name": "uid",
+          "label": "UID",
+          "type": "text",
+          "sortable": true,
+          "id": "u:cfdebdd6424f"
+        },
+        {
+          "name": "name",
+          "label": "姓名",
+          "type": "text",
+          "id": "u:21852f5521fb"
+        },
+        {
+          "name": "phone",
+          "label": "手机号",
+          "type": "text",
+          "id": "u:56174baba7ae"
+        },
+        {
+          "name": "nick_name",
+          "label": "微信昵称",
+          "type": "text",
+          "id": "u:0c18ec0d88db"
+        },
+        {
+          "name": "inner",
+          "label": "用户分类",
+          "type": "tpl",
+          "id": "u:dfc5bb5428db",
+          "tpl": "${inner|isTrue:'内部员工':'警官'}"
+        },
+        {
+          "name": "analyst_whitelist",
+          "label": "分析师白名单",
+          "type": "tpl",
+          "id": "u:2e6a23f7f3e5",
+          "tpl": "${analyst_whitelist|isTrue:'是':'否'}"
+        },
+        {
+          "name": "department",
+          "label": "警种/所在部门",
+          "type": "text",
+          "id": "u:aca4fb6561be"
+        },
+        {
+          "name": "office_location",
+          "label": "任职地/工作地",
+          "type": "text",
+          "id": "u:c36e722d0774"
+        },
+        {
+          "name": "remarks",
+          "label": "备注",
+          "type": "text",
+          "id": "u:60c1bda1736a"
+        },
+        {
+          "label": "注册时间",
+          "type": "text",
+          "id": "u:2db2d8490e47",
+          "name": "start_time_str",
+          "sortable": true
+        },
+        {
+          "type": "text",
+          "id": "u:a20c533a8f4c",
+          "label": "试用期到期时间",
+          "name": "end_time_str",
+          "sortable": true
+        },
+        {
+          "type": "text",
+          "id": "u:fcf1f9769a03",
+          "label": "审核状态",
+          "name": "audit_status_str"
+        },
+        {
+          "type": "text",
+          "id": "u:71c79850699d",
+          "label": "有效状态",
+          "name": "status_str"
+        },
+        {
+          "type": "operation",
+          "id": "u:b828ff81f0f4",
+          "label": "操作",
+          "buttons": [
+            {
+              "label": "查看",
+              "type": "button",
+              "actionType": "dialog",
+              "level": "link",
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "name": "uid",
+                      "label": "UID",
+                      "type": "static"
+                    },
+                    {
+                      "name": "name",
+                      "label": "姓名",
+                      "type": "static"
+                    },
+                    {
+                      "name": "sex_str",
+                      "label": "性别",
+                      "type": "static"
+                    },
+                    {
+                      "name": "phone",
+                      "label": "手机号",
+                      "type": "static"
+                    },
+                    {
+                      "label": "微信昵称",
+                      "name": "nick_name",
+                      "type": "static"
+                    },
+                    {
+                      "name": "inner",
+                      "label": "用户分类",
+                      "type": "static",
+                      "tpl": "${inner|isTrue:'内部员工':'警官'}"
+                    },
+                    {
+                      "name": "analyst_whitelist",
+                      "label": "分析师白名单",
+                      "type": "static",
+                      "tpl": "${analyst_whitelist|isTrue:'是':'否'}"
+                    },
+                    {
+                      "name": "police_id",
+                      "label": "警号/工号",
+                      "type": "static"
+                    },
+                    {
+                      "name": "department",
+                      "label": "警种/所在部门",
+                      "type": "static"
+                    },
+                    {
+                      "name": "office_location",
+                      "label": "任职地/工作地",
+                      "type": "static"
+                    },
+                    {
+                      "type": "page",
+                      "body": {
+                        "type": "table",
+                        "data": {
+                          "items": [
+                            {
+                              "photo": "正面",
+                              "image": "${photo.front}"
+                            },
+                            {
+                              "photo": "反面",
+                              "image": "${photo.back}"
+                            }
+                          ]
+                        },
+                        "columns": [
+                          {
+                            "name": "photo",
+                            "label": "警官证（正反面）"
+                          },
+                          {
+                            "name": "image",
+                            "label": "证件照",
+                            "type": "image",
+                            "enlargeAble": true,
+                            "showToolbar": true
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "label": "备注",
+                      "name": "remarks",
+                      "type": "static"
+                    },
+                    {
+                      "name": "audit_status_str",
+                      "type": "static",
+                      "label": "审核状态"
+                    },
+                    {
+                      "type": "textarea",
+                      "name": "audit_desc",
+                      "placeholder": "请填写不通过原因，内容请保持在100个字以内（必填）",
+                      "readOnly": true,
+                      "visibleOn": "${audit_status == 2}"
+                    },
+                    {
+                      "name": "start_time_str",
+                      "label": "首次申请时间",
+                      "type": "static"
+                    },
+                    {
+                      "name": "created_at_str",
+                      "label": "注册时间",
+                      "type": "static"
+                    },
+                    {
+                      "name": "lately_subscribe_time_str",
+                      "label": "最近续订时间",
+                      "type": "static"
+                    },
+                    {
+                      "name": "end_time_str",
+                      "label": "试用到期时间",
+                      "type": "static"
+                    }
+                  ],
+                  "mode": "horizontal",
+                  "autoFocus": false,
+                  "horizontal": {
+                    "left": "col-sm-3",
+                    "right": "col-sm-9",
+                    "offset": "col-sm-offset-2"
+                  }
+                }
+              },
+              "id": "u:bca07ac8d103"
+            }
+          ]
+        }
+      ],
+      "bulkActions": [],
+      "itemActions": [],
+      "features": [
+        "view"
+      ],
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "headerToolbar": [
+        "bulkActions",
+        "pagination"
+      ],
+      "name": "crud",
+      "filter": {
+        "title": "条件搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "type": "input-text",
+                "name": "uid",
+                "clearable": true,
+                "placeholder": "请输入uid",
+                "size": "md",
+                "id": "u:ba5281c2458c"
+              },
+              {
+                "type": "input-text",
+                "name": "name",
+                "clearable": true,
+                "placeholder": "请输入姓名/微信昵称",
+                "size": "md",
+                "id": "u:ebb773dd7826"
+              },
+              {
+                "type": "input-text",
+                "name": "phone",
+                "clearable": true,
+                "placeholder": "请输入手机号",
+                "size": "sm",
+                "id": "u:570f26b439de"
+              },
+              {
+                "type": "input-text",
+                "name": "office_location",
+                "clearable": true,
+                "placeholder": "请输入工作地",
+                "size": "sm",
+                "id": "u:a2a738dc8bae"
+              },
+              {
+                "label": "用户分类",
+                "type": "select",
+                "name": "inner",
+                "placeholder": "全部",
+                "size": "sm",
+                "options": [
+                  {
+                    "label": "内部员工",
+                    "value": true
+                  },
+                  {
+                    "label": "警官",
+                    "value": false
+                  }
+                ],
+                "id": "u:ff588b8e92a5",
+                "clearable": true
+              },
+              {
+                "label": "分析师白名单",
+                "type": "select",
+                "name": "analyst_whitelist",
+                "placeholder": "全部",
+                "size": "sm",
+                "options": [
+                  {
+                    "label": "是",
+                    "value": true
+                  },
+                  {
+                    "label": "否",
+                    "value": false
+                  }
+                ],
+                "clearable": true,
+                "id": "u:cf45d767177b"
+              },
+              {
+                "label": "审核状态",
+                "type": "select",
+                "name": "audit_status",
+                "placeholder": "全部",
+                "size": "sm",
+                "options": [
+                  {
+                    "label": "已通过",
+                    "value": 0
+                  },
+                  {
+                    "label": "待审核",
+                    "value": 1
+                  },
+                  {
+                    "label": "未通过",
+                    "value": 2
+                  }
+                ],
+                "id": "u:adf73cd62d22",
+                "clearable": true
+              },
+              {
+                "label": "用户状态",
+                "type": "select",
+                "name": "status",
+                "clearable": true,
+                "placeholder": "全部",
+                "size": "sm",
+                "options": [
+                  {
+                    "label": "生效中",
+                    "value": 0
+                  },
+                  {
+                    "label": "已停用",
+                    "value": 1
+                  },
+                  {
+                    "label": "已到期",
+                    "value": 2
+                  }
+                ],
+                "id": "u:ab5be6c831d5"
+              }
+            ],
+            "id": "u:f56947d01cf0"
+          }
+        ],
+        "actions": [
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "筛选",
+            "id": "u:fac6ef9611c2"
+          }
+        ],
+        "id": "u:85eb607b9317"
+      }
+    }
+  ],
+  "id": "u:8b9215cedcb2",
+  "messages": {},
+  "asideResizor": false,
+  "pullRefresh": {
+    "disabled": true
+  },
+  "title": "用户查询"
+}
